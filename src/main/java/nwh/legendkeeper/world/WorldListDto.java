@@ -1,23 +1,29 @@
 package nwh.legendkeeper.world;
 
 /**
- * Class used to contain all data 
- * for a Legend Keeper World including
- * map, name, sessions, etc.
+ * Class used to contain a shortened 
+ * set of data for a Legend Keeper World including
+ * name, desc, etc.
  * 
  * @author Nathanail.W.Heard
  *
  */
 public class WorldListDto {
 	
+	private String id;
+	
 	private String name;
 	
 	private String desc;
 	
-	private String mapData;
-	
 	public WorldListDto() {
 		// Default
+	}
+	
+	public WorldListDto(World world) {
+		this.id = world.getId();
+		this.name = world.getName();
+		this.desc = world.getDesc();
 	}
 
 	public String getName() {
@@ -36,12 +42,11 @@ public class WorldListDto {
 		this.desc = desc;
 	}
 
-	public String getMapData() {
-		return mapData;
+	public String getId() {
+		return id;
 	}
 
-	public void setMapData(String mapData) {
-		this.mapData = mapData;
+	public void setId(String id) {
+		this.id = id;
 	}
-
 }
