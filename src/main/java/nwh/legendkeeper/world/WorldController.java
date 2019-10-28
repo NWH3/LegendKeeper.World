@@ -43,10 +43,23 @@ public class WorldController {
 	 * @return a single World Dto with all info
 	 */
 	@CrossOrigin
-	@GetMapping("/world/id/{id}")
+	@GetMapping("/id/{id}")
     public ResponseEntity<World> getWorldById(@PathVariable("id") String id) {
 		World responseDto = worldService.getWorldById(id);
 		return new ResponseEntity<World>(responseDto, HttpStatus.OK);
+    }
+	
+	/**
+	 * Method used to return a single specified
+	 * world map for a given user
+	 * 
+	 * @return a single World Map Dto with all info
+	 */
+	@CrossOrigin
+	@GetMapping("/map/id/{id}")
+    public ResponseEntity<WorldMap> getWorldMapById(@PathVariable("id") String id) {
+		WorldMap responseDto = worldService.getWorldMapById(id);
+		return new ResponseEntity<WorldMap>(responseDto, HttpStatus.OK);
     }
 
 }

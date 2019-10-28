@@ -14,6 +14,8 @@ public class WorldListDto {
 	
 	private String name;
 	
+	private String era;
+	
 	private String desc;
 	
 	public WorldListDto() {
@@ -23,6 +25,7 @@ public class WorldListDto {
 	public WorldListDto(World world) {
 		this.id = world.getId();
 		this.name = world.getName();
+		this.era = world.getEra();
 		this.desc = world.getDesc();
 	}
 
@@ -48,5 +51,13 @@ public class WorldListDto {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getEra() {
+		return era;
+	}
+
+	public void setEra(String era) {
+		this.era = era;
 	}
 }
