@@ -1,5 +1,7 @@
 package nwh.legendkeeper.world;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Id;
@@ -22,11 +24,13 @@ public class World {
 	
 	private String name;
 	
+	private String era;
+	
 	private String desc;
 	
-	private List<String> sessions;
+	private List<Session> sessions;
 	
-	private String mapData;
+	private List<String> mapIds;
 	
 	private String dateCreated;
 	
@@ -34,6 +38,10 @@ public class World {
 	
 	public World() {
 		// Default
+		this.mapIds = new ArrayList<String>();
+		this.sessions = new ArrayList<Session>();
+		this.dateCreated = new Date().toString();
+		this.dateUpdated = new Date().toString();
 	}
 
 	public String getName() {
@@ -52,19 +60,11 @@ public class World {
 		this.desc = desc;
 	}
 
-	public String getMapData() {
-		return mapData;
-	}
-
-	public void setMapData(String mapData) {
-		this.mapData = mapData;
-	}
-
-	public List<String> getSessions() {
+	public List<Session> getSessions() {
 		return sessions;
 	}
 
-	public void setSessions(List<String> sessions) {
+	public void setSessions(List<Session> sessions) {
 		this.sessions = sessions;
 	}
 
@@ -90,6 +90,22 @@ public class World {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getEra() {
+		return era;
+	}
+
+	public void setEra(String era) {
+		this.era = era;
+	}
+
+	public List<String> getMapIds() {
+		return mapIds;
+	}
+
+	public void setMapIds(List<String> mapIds) {
+		this.mapIds = mapIds;
 	}
 
 }
