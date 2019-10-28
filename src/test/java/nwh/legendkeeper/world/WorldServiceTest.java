@@ -7,7 +7,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,7 +22,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
-public class WorldServiceTests {
+public class WorldServiceTest {
 
 	@Autowired
 	private WorldService worldService;
@@ -64,4 +64,31 @@ public class WorldServiceTests {
 
 		assertThat(resposneDto.getContent().size()).isEqualTo(0);
 	}
+	
+	@Test
+	public void testGetWorldById_unitTest_foundWorld() throws Exception {
+
+		World world = new World();
+		world.setId("1");
+		world.setName("World 1");
+
+		when(worldRepository.findOneById(any(String.class))).thenReturn(world);
+
+		World resposneDto = worldService.getWorldById("1");
+
+		assertThat(resposneDto.getId()).isEqualTo(world.getId());
+		assertThat(resposneDto.getName()).isEqualTo(world.getName());
+	}
+	
+	@Test
+	public void testGetWorldById_unitTest_noWorldFound() throws Exception {
+
+		when(worldRepository.findOneById(any(String.class))).thenReturn(null);
+
+		World resposneDto = worldService.getWorldById("1");
+
+		assertThat(resposneDto).isNull();
+	}
+	
+	
 }

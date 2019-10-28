@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 /**
  * Class used to contain all data 
  * for a Legend Keeper World map including
- * map data, created date, etc.
+ * map data, name, created date, etc.
  * 
  * @author Nathanail.W.Heard
  *
@@ -21,6 +21,8 @@ public class WorldMap {
 	private String id;
 	
 	private String map;
+	
+	private String name;
 	
 	private String dateCreated;
 	
@@ -34,6 +36,13 @@ public class WorldMap {
 
 	public WorldMap(String map) {
 		this.map = map;
+		this.dateCreated = new Date().toString();
+		this.dateUpdated = new Date().toString();
+	}
+	
+	public WorldMap(String map, String name) {
+		this.map = map;
+		this.name  = name;
 		this.dateCreated = new Date().toString();
 		this.dateUpdated = new Date().toString();
 	}
@@ -68,5 +77,13 @@ public class WorldMap {
 
 	public void setDateUpdated(String dateUpdated) {
 		this.dateUpdated = dateUpdated;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,16 +40,20 @@ public class WorldService {
 	
 	@Autowired
 	private WorldMapRepository worldMapRepo;
+	
+	public WorldService() {
+		this.gson = new Gson();
+	}
 
 	public Page<WorldListDto> getAllWorlds(Pageable pageable) {
 		Page<World> worlds = worldRepo.findAll(pageable);
-		Page<WorldListDto> worldDtos = null;
+		Page<WorldListDto> worldDtos = new PageImpl<>(new ArrayList<>(), pageable, 0);
 		if (worlds != null && !worlds.isEmpty()) {
-		 worldDtos = new PageImpl<>(worlds.stream()
+			worldDtos = new PageImpl<>(worlds.stream()
 				.map(world -> new WorldListDto(world))
 				.collect(Collectors.toList()), pageable, worlds.getTotalElements());
+			LOGGER.info("Worlds returned: " + gson.toJson(worldDtos));
 		}
-		LOGGER.info("Worlds returned: " + gson.toJson(worldDtos));
 		return worldDtos;
 	}
 	
@@ -82,6 +87,7 @@ public class WorldService {
 
 			WorldMap worldMap = new WorldMap(symbaroumWorldMapOne);
 			worldMap = worldMapRepo.save(worldMap);
+			worldMap.setName("Symbaroum");
 			World world = gson.fromJson(symbaroumdWorldOne, World.class);
 			List<String> mapIds = world.getMapIds();
 			mapIds.add(worldMap.getId());
@@ -94,6 +100,7 @@ public class WorldService {
 
 			WorldMap worldMapTwo = new WorldMap(symbaroumWorldMapTwo);
 			worldMapTwo = worldMapRepo.save(worldMapTwo);
+			worldMapTwo.setName("Symbaroum");
 			World worldTwo = gson.fromJson(symbaroumdWorldTwo, World.class);
 			List<String> mapIdsTwo = worldTwo.getMapIds();
 			mapIdsTwo.add(worldMapTwo.getId());
