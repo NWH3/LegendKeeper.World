@@ -8,6 +8,9 @@ import javax.persistence.Id;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import nwh.legendkeeper.world.map.WorldMapListDto;
+import nwh.legendkeeper.world.session.WorldSession;
+
 /**
  * Class used to contain all data 
  * for a Legend Keeper World including
@@ -28,9 +31,9 @@ public class World {
 	
 	private String desc;
 	
-	private List<Session> sessions;
+	private List<WorldSession> sessions;
 	
-	private List<String> mapIds;
+	private List<WorldMapListDto> maps;
 	
 	private String dateCreated;
 	
@@ -38,8 +41,16 @@ public class World {
 	
 	public World() {
 		// Default
-		this.mapIds = new ArrayList<String>();
-		this.sessions = new ArrayList<Session>();
+		this.maps = new ArrayList<WorldMapListDto>();
+		this.sessions = new ArrayList<WorldSession>();
+		this.dateCreated = new Date().toString();
+		this.dateUpdated = new Date().toString();
+	}
+
+	public World(CreateWorldRequest worldRequest) {
+		this.name = worldRequest.getName();
+		this.era = worldRequest.getEra();
+		this.desc = worldRequest.getDesc();
 		this.dateCreated = new Date().toString();
 		this.dateUpdated = new Date().toString();
 	}
@@ -60,11 +71,11 @@ public class World {
 		this.desc = desc;
 	}
 
-	public List<Session> getSessions() {
+	public List<WorldSession> getSessions() {
 		return sessions;
 	}
 
-	public void setSessions(List<Session> sessions) {
+	public void setSessions(List<WorldSession> sessions) {
 		this.sessions = sessions;
 	}
 
@@ -100,12 +111,12 @@ public class World {
 		this.era = era;
 	}
 
-	public List<String> getMapIds() {
-		return mapIds;
+	public List<WorldMapListDto> getMaps() {
+		return maps;
 	}
 
-	public void setMapIds(List<String> mapIds) {
-		this.mapIds = mapIds;
+	public void setMaps(List<WorldMapListDto> mapIds) {
+		this.maps = mapIds;
 	}
 
 }

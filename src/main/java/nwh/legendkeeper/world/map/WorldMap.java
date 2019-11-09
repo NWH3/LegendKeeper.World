@@ -1,4 +1,4 @@
-package nwh.legendkeeper.world;
+package nwh.legendkeeper.world.map;
 
 import java.util.Date;
 
@@ -22,8 +22,6 @@ public class WorldMap {
 	
 	private String map;
 	
-	private String name;
-	
 	private String dateCreated;
 	
 	private String dateUpdated;
@@ -36,13 +34,6 @@ public class WorldMap {
 
 	public WorldMap(String map) {
 		this.map = map;
-		this.dateCreated = new Date().toString();
-		this.dateUpdated = new Date().toString();
-	}
-	
-	public WorldMap(String map, String name) {
-		this.map = map;
-		this.name  = name;
 		this.dateCreated = new Date().toString();
 		this.dateUpdated = new Date().toString();
 	}
@@ -77,13 +68,5 @@ public class WorldMap {
 
 	public void setDateUpdated(String dateUpdated) {
 		this.dateUpdated = dateUpdated;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 }

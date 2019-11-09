@@ -1,6 +1,11 @@
-package nwh.legendkeeper.world;
+package nwh.legendkeeper.world.session;
 
 import java.util.Date;
+import java.util.UUID;
+
+import javax.persistence.Id;
+
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Class used to contain all 
@@ -10,7 +15,11 @@ import java.util.Date;
  * @author Nathanial.W.Heard
  *
  */
-public class Session {
+public class WorldSession {
+	
+	@Id
+	@SerializedName("_id")
+	private String id;
 	
 	private String name;
 
@@ -22,8 +31,16 @@ public class Session {
 	
 	private String dateUpdated;
 	
-	public Session() {
+	public WorldSession() {
 		// Default
+		this.dateCreated = new Date().toString();
+		this.dateUpdated = new Date().toString();
+	}
+
+	public WorldSession(CreateWorldSessionRequest createSessionRequest) {
+		this.id = UUID.randomUUID().toString();
+		this.name = createSessionRequest.getName();
+		this.desc = createSessionRequest.getDesc();
 		this.dateCreated = new Date().toString();
 		this.dateUpdated = new Date().toString();
 	}
@@ -66,5 +83,13 @@ public class Session {
 
 	public void setDateUpdated(String dateUpdated) {
 		this.dateUpdated = dateUpdated;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 }
