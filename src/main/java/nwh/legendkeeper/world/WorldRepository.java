@@ -19,5 +19,7 @@ public interface WorldRepository extends MongoRepository<World, String> {
 	Page<World> findAll(Pageable pageable);
 	
 	World findOneById(String id);
+	
+	World findOneByName(String name);
 
 }

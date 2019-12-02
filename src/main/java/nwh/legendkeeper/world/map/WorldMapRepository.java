@@ -1,4 +1,4 @@
-package nwh.legendkeeper.world;
+package nwh.legendkeeper.world.map;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;

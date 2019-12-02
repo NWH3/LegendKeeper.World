@@ -1,4 +1,4 @@
-package nwh.legendkeeper.world;
+package nwh.legendkeeper.world.map;
 
 import java.util.Date;
 
@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 /**
  * Class used to contain all data 
  * for a Legend Keeper World map including
- * map data, created date, etc.
+ * map data, name, created date, etc.
  * 
  * @author Nathanail.W.Heard
  *

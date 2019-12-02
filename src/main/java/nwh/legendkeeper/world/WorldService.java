@@ -5,7 +5,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
+
+import nwh.legendkeeper.world.map.WorldMap;
+import nwh.legendkeeper.world.map.WorldMapListDto;
+import nwh.legendkeeper.world.map.WorldMapRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,16 +46,20 @@ public class WorldService {
 	
 	@Autowired
 	private WorldMapRepository worldMapRepo;
+	
+	public WorldService() {
+		this.gson = new Gson();
+	}
 
 	public Page<WorldListDto> getAllWorlds(Pageable pageable) {
 		Page<World> worlds = worldRepo.findAll(pageable);
-		Page<WorldListDto> worldDtos = null;
+		Page<WorldListDto> worldDtos = new PageImpl<>(new ArrayList<>(), pageable, 0);
 		if (worlds != null && !worlds.isEmpty()) {
-		 worldDtos = new PageImpl<>(worlds.stream()
+			worldDtos = new PageImpl<>(worlds.stream()
 				.map(world -> new WorldListDto(world))
 				.collect(Collectors.toList()), pageable, worlds.getTotalElements());
+			LOGGER.info("Worlds returned: " + gson.toJson(worldDtos));
 		}
-		LOGGER.info("Worlds returned: " + gson.toJson(worldDtos));
 		return worldDtos;
 	}
 	
@@ -61,17 +72,37 @@ public class WorldService {
 		}
 		return world;
 	}
-	
-	public WorldMap getWorldMapById(String id) {
-		WorldMap worldMap = worldMapRepo.findOneById(id);
-		if (worldMap != null) {
-			LOGGER.info("World Map found with record id: " + worldMap.getId());
+
+	public World updateWorld(UpdateWorldRequest worldRequest) {
+		World world = worldRepo.findOneById(worldRequest.getId());
+		if (world != null) {
+			world.setName(worldRequest.getName());
+			world.setEra(worldRequest.getEra());
+			world.setDesc(worldRequest.getDesc());
+			world.setDateUpdated(new Date().toString());
+			world = worldRepo.save(world);
 		} else {
-			LOGGER.warn("World Map not found with given id: " + id);
+			LOGGER.error("Unable to update world with id: " + worldRequest.getId());
 		}
-		return worldMap;
+		return world;
 	}
 
+	public World createWorld(CreateWorldRequest worldRequest) {
+		World world = new World(worldRequest);
+		world = worldRepo.save(world);
+		return world;
+	}
+	
+	public World deleteWorld(String worldId) {
+		World world = worldRepo.findOneById(worldId);
+		if (world != null) {
+			worldRepo.deleteById(worldId);
+		} else {
+			LOGGER.error("Unable to find world with id: " + worldId);
+		}
+		return world;
+	}
+	
 	public void initMongoDB() {
 		gson = new Gson();
 		Page<World> worlds = worldRepo.findAll(PageRequest.of(0, 10));
@@ -83,9 +114,12 @@ public class WorldService {
 			WorldMap worldMap = new WorldMap(symbaroumWorldMapOne);
 			worldMap = worldMapRepo.save(worldMap);
 			World world = gson.fromJson(symbaroumdWorldOne, World.class);
-			List<String> mapIds = world.getMapIds();
-			mapIds.add(worldMap.getId());
-			world.setMapIds(mapIds);
+			world.getSessions().stream().forEach(session -> {
+				session.setId(UUID.randomUUID().toString());
+			});
+			List<WorldMapListDto> mapDtos = world.getMaps();
+			mapDtos.add(new WorldMapListDto(world.getName(), worldMap.getId()));
+			world.setMaps(mapDtos);
 			world = worldRepo.save(world);
 
 			// Insert Symbaroum world two
@@ -95,9 +129,12 @@ public class WorldService {
 			WorldMap worldMapTwo = new WorldMap(symbaroumWorldMapTwo);
 			worldMapTwo = worldMapRepo.save(worldMapTwo);
 			World worldTwo = gson.fromJson(symbaroumdWorldTwo, World.class);
-			List<String> mapIdsTwo = worldTwo.getMapIds();
-			mapIdsTwo.add(worldMapTwo.getId());
-			worldTwo.setMapIds(mapIdsTwo);
+			worldTwo.getSessions().stream().forEach(session -> {
+				session.setId(UUID.randomUUID().toString());
+			});
+			List<WorldMapListDto> mapDtosTwo = worldTwo.getMaps();
+			mapDtosTwo.add(new WorldMapListDto(worldTwo.getName(), worldMapTwo.getId()));
+			worldTwo.setMaps(mapDtosTwo);
 			worldRepo.save(worldTwo);
 		}
 	}
